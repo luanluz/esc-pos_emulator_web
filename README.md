@@ -44,9 +44,11 @@ npm run sample
 
 | Variable | Default | Description |
 |----------|---------|-------------|
+| `APP_ENV` | `dev` (`prod` in Docker) | `dev` shows LAN IP in the UI; `prod` resolves public IP via ipify |
 | `HOST` | `0.0.0.0` | Bind interface |
 | `HTTP_PORT` / `PORT` | `3000` | Web UI port |
 | `TCP_PORT` | `9100` | ESC/POS port |
+| `TCP_HOST_PORT` | same as `TCP_PORT` | Host-facing TCP port shown in the UI (Docker publish) |
 | `PAPER_WIDTH` | `80` | `58` or `80` |
 | `JOB_IDLE_MS` | `350` | Idle time before closing a job on an open TCP connection |
 | `DEFAULT_CODEPAGE` / `FORCE_CODEPAGE` | `windows-1252` | Text encoding (many BR apps send 1252 even with `ESC t` for CP850/860) |
