@@ -33,8 +33,18 @@
       <section class="block">
         <h2>Impressora</h2>
         <div class="kv">
-          <div><span>TCP</span><code id="tcpAddr">—</code></div>
-          <div><span>Web</span><code id="httpAddr">—</code></div>
+          <div>
+            <span>TCP</span>
+            <code class="addr" id="tcpAddr">
+              <button type="button" class="addr-part" id="tcpHost" title="Copiar IP">—</button><span class="addr-sep" hidden>:</span><button type="button" class="addr-part" id="tcpPortBtn" title="Copiar porta" hidden>—</button>
+            </code>
+          </div>
+          <div>
+            <span>Web</span>
+            <code class="addr" id="httpAddr">
+              <button type="button" class="addr-part" id="httpHost" title="Copiar host">—</button><span class="addr-sep" hidden>:</span><button type="button" class="addr-part" id="httpPortBtn" title="Copiar porta" hidden>—</button>
+            </code>
+          </div>
           <div><span>Jobs</span><strong id="jobCount">0</strong></div>
           <div><span>Bytes</span><strong id="byteCount">0</strong></div>
         </div>

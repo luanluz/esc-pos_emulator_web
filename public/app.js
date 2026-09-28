@@ -1,8 +1,12 @@
 (() => {
   const $ = (sel) => document.querySelector(sel);
   const connStatus = $('#connStatus');
-  const tcpAddr = $('#tcpAddr');
-  const httpAddr = $('#httpAddr');
+  const tcpHost = $('#tcpHost');
+  const tcpPortBtn = $('#tcpPortBtn');
+  const tcpSep = tcpHost?.parentElement?.querySelector('.addr-sep');
+  const httpHost = $('#httpHost');
+  const httpPortBtn = $('#httpPortBtn');
+  const httpSep = httpHost?.parentElement?.querySelector('.addr-sep');
   const jobCount = $('#jobCount');
   const byteCount = $('#byteCount');
   const jobsEl = $('#jobs');
@@ -25,6 +29,63 @@
     if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
     return `${(n / (1024 * 1024)).toFixed(2)} MB`;
   }
+
+  function splitHostPort(addr) {
+    if (!addr || addr === '—') return { host: addr || '—', port: null };
+    const idx = addr.lastIndexOf(':');
+    if (idx <= 0) return { host: addr, port: null };
+    const port = addr.slice(idx + 1);
+    if (!/^\d+$/.test(port)) return { host: addr, port: null };
+    return { host: addr.slice(0, idx), port };
+  }
+
+  function setAddrParts(hostEl, sepEl, portEl, addr) {
+    const { host, port } = splitHostPort(addr);
+    hostEl.textContent = host;
+    if (port) {
+      portEl.textContent = port;
+      portEl.hidden = false;
+      if (sepEl) sepEl.hidden = false;
+    } else {
+      portEl.textContent = '';
+      portEl.hidden = true;
+      if (sepEl) sepEl.hidden = true;
+    }
+  }
+
+  async function copyText(el, value) {
+    if (!value || value === '—') return;
+    try {
+      await navigator.clipboard.writeText(value);
+    } catch {
+      const ta = document.createElement('textarea');
+      ta.value = value;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+    el.classList.add('is-copied');
+    const prev = el.title;
+    el.title = 'Copiado!';
+    clearTimeout(el._copyTimer);
+    el._copyTimer = setTimeout(() => {
+      el.classList.remove('is-copied');
+      el.title = prev;
+    }, 900);
+  }
+
+  function bindCopy(el) {
+    el.addEventListener('click', () => copyText(el, el.textContent.trim()));
+  }
+
+  bindCopy(tcpHost);
+  bindCopy(tcpPortBtn);
+  bindCopy(httpHost);
+  bindCopy(httpPortBtn);
 
   function applySnapshot(snap) {
     if (!snap) return;
@@ -155,8 +216,8 @@
 
       if (msg.type === 'hello') {
         resolveDisplayAddresses(msg).then((addrs) => {
-          tcpAddr.textContent = addrs.tcp;
-          httpAddr.textContent = addrs.http;
+          setAddrParts(tcpHost, tcpSep, tcpPortBtn, addrs.tcp);
+          setAddrParts(httpHost, httpSep, httpPortBtn, addrs.http);
         });
         applySnapshot(msg.snapshot);
       } else if (msg.type === 'snapshot') {
@@ -235,7 +296,7 @@
     return parts.map((b) => b.toString(16).padStart(2, '0')).join(' ');
   }
 
-  httpAddr.textContent = location.host;
+  setAddrParts(httpHost, httpSep, httpPortBtn, location.host);
 
   fetch('/api/jobs', { method: 'DELETE' })
     .catch(() => {})
