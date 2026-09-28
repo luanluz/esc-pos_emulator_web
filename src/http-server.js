@@ -6,16 +6,27 @@ const express = require('express');
 const { WebSocketServer } = require('ws');
 const { getLanAddresses } = require('./lan');
 
-function startHttpServer({ port, store, tcpPort, host = '0.0.0.0' }) {
+function startHttpServer({
+  port,
+  store,
+  tcpPort,
+  advertiseTcpPort,
+  appEnv = 'dev',
+  host = '0.0.0.0',
+}) {
   const app = express();
   app.use(express.json({ limit: '8mb' }));
   app.use(express.raw({ type: 'application/octet-stream', limit: '8mb' }));
   app.use(express.static(path.join(__dirname, '..', 'public')));
 
+  const publicTcpPort = advertiseTcpPort || tcpPort;
+
   function networkInfo() {
     return {
       host,
+      appEnv,
       tcpPort,
+      advertiseTcpPort: publicTcpPort,
       httpPort: port,
       lanAddresses: getLanAddresses(),
     };
@@ -124,7 +135,7 @@ function startHttpServer({ port, store, tcpPort, host = '0.0.0.0' }) {
     console.log(`[http] local → http://localhost:${port}`);
     for (const ip of lan) {
       console.log(`[http] LAN   → http://${ip}:${port}`);
-      console.log(`[hint] print to ${ip}:${tcpPort}`);
+      console.log(`[hint] print to ${ip}:${publicTcpPort}`);
     }
   });
 

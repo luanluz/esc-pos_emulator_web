@@ -108,6 +108,36 @@
       .replace(/>/g, '&gt;');
   }
 
+  async function fetchPublicIp() {
+    try {
+      const res = await fetch('https://api.ipify.org?format=json');
+      if (!res.ok) return null;
+      const data = await res.json();
+      return typeof data.ip === 'string' ? data.ip : null;
+    } catch {
+      return null;
+    }
+  }
+
+  async function resolveDisplayAddresses(msg) {
+    const tcpPort = msg.advertiseTcpPort || msg.tcpPort;
+    const lan = (msg.lanAddresses && msg.lanAddresses[0]) || null;
+    const isProd = msg.appEnv === 'prod';
+
+    if (!isProd) {
+      return {
+        tcp: lan ? `${lan}:${tcpPort}` : `0.0.0.0:${tcpPort}`,
+        http: lan ? `${lan}:${msg.httpPort}` : location.host,
+      };
+    }
+
+    const publicIp = await fetchPublicIp();
+    return {
+      tcp: publicIp ? `${publicIp}:${tcpPort}` : `${location.hostname}:${tcpPort}`,
+      http: location.host,
+    };
+  }
+
   function connectWs() {
     const proto = location.protocol === 'https:' ? 'wss' : 'ws';
     const ws = new WebSocket(`${proto}://${location.host}/ws`);
@@ -124,9 +154,10 @@
       try { msg = JSON.parse(ev.data); } catch { return; }
 
       if (msg.type === 'hello') {
-        const lan = (msg.lanAddresses && msg.lanAddresses[0]) || null;
-        tcpAddr.textContent = lan ? `${lan}:${msg.tcpPort}` : `0.0.0.0:${msg.tcpPort}`;
-        httpAddr.textContent = lan ? `${lan}:${msg.httpPort}` : location.host;
+        resolveDisplayAddresses(msg).then((addrs) => {
+          tcpAddr.textContent = addrs.tcp;
+          httpAddr.textContent = addrs.http;
+        });
         applySnapshot(msg.snapshot);
       } else if (msg.type === 'snapshot') {
         applySnapshot(msg.snapshot);

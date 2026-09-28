@@ -6,6 +6,7 @@ RUN if [ -f package-lock.json ]; then npm ci --omit=dev; else npm install --omit
 FROM node:22-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production \
+    APP_ENV=prod \
     HOST=0.0.0.0 \
     HTTP_PORT=3000 \
     TCP_PORT=9100
