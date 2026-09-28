@@ -1,0 +1,10 @@
+node_modules
+npm-debug.log*
+.git
+.idea
+.DS_Store
+*.log
+.env
+.env.*
+README.md
+scripts/probe-encoding.js

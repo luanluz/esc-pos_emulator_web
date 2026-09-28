@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ESC/POS Emulator</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/regular/style.css" />
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.2/src/duotone/style.css" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-left">
+      <i class="ph ph-printer logo" aria-hidden="true"></i>
+      <div class="title-block">
+        <h1>ESC/POS Emulator</h1>
+        <p id="previewHint">Aguardando impressões na porta 9100…</p>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span class="status" id="connStatus" data-state="connecting">conectando…</span>
+    </div>
+  </header>
+
+  <main class="workspace">
+    <aside class="sidebar left">
+      <section class="block">
+        <h2>Impressora</h2>
+        <div class="kv">
+          <div><span>TCP</span><code id="tcpAddr">—</code></div>
+          <div><span>Web</span><code id="httpAddr">—</code></div>
+          <div><span>Jobs</span><strong id="jobCount">0</strong></div>
+          <div><span>Bytes</span><strong id="byteCount">0</strong></div>
+        </div>
+      </section>
+
+      <section class="block">
+        <h2>Papel</h2>
+        <div class="seg" role="group" aria-label="Largura do papel">
+          <button type="button" data-width="58">58 mm</button>
+          <button type="button" data-width="80" class="active">80 mm</button>
+        </div>
+      </section>
+    </aside>
+
+    <section class="canvas">
+      <div class="stage" id="stage">
+        <div class="empty" id="emptyState">
+          <div class="empty-icon" aria-hidden="true">
+            <i class="ph-duotone ph-receipt"></i>
+          </div>
+          <p>Nenhum documento</p>
+          <span>Os recibos impressos via ESC/POS aparecem aqui em tempo real.</span>
+          <code class="empty-hint">TCP · porta 9100</code>
+        </div>
+        <div class="jobs" id="jobs"></div>
+      </div>
+
+      <div class="fab-bar" role="toolbar" aria-label="Ações">
+        <button type="button" class="fab" id="btnSample">
+          <i class="ph ph-receipt" aria-hidden="true"></i>
+          <span>Exemplo</span>
+        </button>
+        <button type="button" class="fab danger" id="btnClear">
+          <i class="ph ph-trash" aria-hidden="true"></i>
+          <span>Limpar</span>
+        </button>
+      </div>
+    </section>
+
+    <aside class="sidebar right">
+      <div class="block-head">
+        <h2>Comandos</h2>
+        <span class="badge" id="inspectorHint">—</span>
+      </div>
+      <ul class="cmd-list" id="cmdList"></ul>
+    </aside>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
