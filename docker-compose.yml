@@ -2,15 +2,15 @@ services:
   escpos-emulator:
     build: .
     image: escpos-emulator-web:latest
-    container_name: escpos-emulator
     restart: unless-stopped
     environment:
       HOST: ${HOST:-0.0.0.0}
       HTTP_PORT: ${HTTP_PORT:-3000}
       TCP_PORT: ${TCP_PORT:-9100}
+    expose:
+      - "${HTTP_PORT:-3000}"
     ports:
-      - "${HTTP_PORT:-3000}:${HTTP_PORT:-3000}"
-      - "${TCP_PORT:-9100}:${TCP_PORT:-9100}"
+      - "${TCP_HOST_PORT:-9100}:${TCP_PORT:-9100}"
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://127.0.0.1:${HTTP_PORT:-3000}/api/status"]
       interval: 30s
