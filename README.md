@@ -44,7 +44,8 @@ npm run sample
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `APP_ENV` | `dev` (`prod` in Docker) | `dev` shows LAN IP in the UI; `prod` resolves public IP via ipify |
+| `APP_ENV` | `dev` (`prod` in Docker) | `dev` shows LAN IP in the UI; `prod` resolves the server public IP via ipify |
+| `ADVERTISE_HOST` | _(auto)_ | Optional host/IP shown for TCP in prod (skips ipify if set) |
 | `HOST` | `0.0.0.0` | Bind interface |
 | `HTTP_PORT` / `PORT` | `3000` | Web UI port |
 | `TCP_PORT` | `9100` | ESC/POS port |

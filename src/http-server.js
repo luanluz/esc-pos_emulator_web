@@ -11,6 +11,7 @@ function startHttpServer({
   store,
   tcpPort,
   advertiseTcpPort,
+  advertiseHost = null,
   appEnv = 'dev',
   host = '0.0.0.0',
 }) {
@@ -27,6 +28,7 @@ function startHttpServer({
       appEnv,
       tcpPort,
       advertiseTcpPort: publicTcpPort,
+      advertiseHost,
       httpPort: port,
       lanAddresses: getLanAddresses(),
     };
@@ -133,9 +135,12 @@ function startHttpServer({
     const lan = getLanAddresses();
     console.log(`[http] web UI listening on ${host}:${port}`);
     console.log(`[http] local → http://localhost:${port}`);
+    if (advertiseHost) {
+      console.log(`[hint] print to ${advertiseHost}:${publicTcpPort}`);
+    }
     for (const ip of lan) {
       console.log(`[http] LAN   → http://${ip}:${port}`);
-      console.log(`[hint] print to ${ip}:${publicTcpPort}`);
+      if (!advertiseHost) console.log(`[hint] print to ${ip}:${publicTcpPort}`);
     }
   });
 

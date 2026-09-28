@@ -169,17 +169,6 @@
       .replace(/>/g, '&gt;');
   }
 
-  async function fetchPublicIp() {
-    try {
-      const res = await fetch('https://api.ipify.org?format=json');
-      if (!res.ok) return null;
-      const data = await res.json();
-      return typeof data.ip === 'string' ? data.ip : null;
-    } catch {
-      return null;
-    }
-  }
-
   async function resolveDisplayAddresses(msg) {
     const tcpPort = msg.advertiseTcpPort || msg.tcpPort;
     const lan = (msg.lanAddresses && msg.lanAddresses[0]) || null;
@@ -192,9 +181,9 @@
       };
     }
 
-    const publicIp = await fetchPublicIp();
+    const host = msg.advertiseHost || location.hostname;
     return {
-      tcp: publicIp ? `${publicIp}:${tcpPort}` : `${location.hostname}:${tcpPort}`,
+      tcp: `${host}:${tcpPort}`,
       http: location.host,
     };
   }

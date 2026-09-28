@@ -5,6 +5,7 @@ services:
     restart: unless-stopped
     environment:
       APP_ENV: ${APP_ENV:-prod}
+      ADVERTISE_HOST: ${ADVERTISE_HOST:-}
       HOST: ${HOST:-0.0.0.0}
       HTTP_PORT: ${HTTP_PORT:-3000}
       TCP_PORT: ${TCP_PORT:-9100}
