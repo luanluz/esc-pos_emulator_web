@@ -165,6 +165,47 @@ body {
   color: var(--text);
 }
 
+.kv .addr {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0;
+  max-width: 70%;
+  overflow: hidden;
+}
+
+.kv .addr-part {
+  appearance: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  border-radius: 3px;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 0.15em;
+  transition: color 0.15s ease, text-decoration-color 0.15s ease, background 0.15s ease;
+}
+
+.kv .addr-part:hover,
+.kv .addr-part:focus-visible {
+  color: var(--accent, #2563eb);
+  text-decoration-color: currentColor;
+  outline: none;
+}
+
+.kv .addr-part.is-copied {
+  color: var(--ok, #16a34a);
+  background: color-mix(in srgb, var(--ok, #16a34a) 12%, transparent);
+}
+
+.kv .addr-sep {
+  user-select: none;
+  opacity: 0.55;
+}
+
 .seg {
   display: grid;
   grid-template-columns: 1fr 1fr;
